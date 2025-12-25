@@ -1,0 +1,12 @@
+name = "MCQGen"
+uuid = "5c5a0f60-5309-4088-8218-100418659550"
+authors = ["MCQ-Gen Team"]
+version = "0.1.0"
+
+[deps]
+Crayons = "a8cc5b0e-0ffa-5ad4-8c14-923d3ee1735f"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
+[compat]
+julia = "1.6"

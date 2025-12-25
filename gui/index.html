@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ-Gen AI - Generate Quizzes Instantly</title>
+    <link rel="stylesheet" href="landing.css">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <i class="fa-solid fa-brain"></i>
+            MCQ-Gen AI
+        </a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it Works</a>
+            <a href="https://github.com/am3lue/mcq-gen" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+        <a href="app.html" class="cta-button">Launch App <i class="fa-solid fa-rocket"></i></a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>Turn Your Notes into Interactive Quizzes</h1>
+        <p>Master any subject with AI-powered multiple choice questions. Simply paste your text, choose a difficulty, and start testing your knowledge instantly.</p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <a href="app.html" class="cta-button" style="padding: 15px 32px; font-size: 1.1rem;">Get Started Now</a>
+            <a href="#how-it-works" class="cta-button" style="background: var(--how-it-works-bg); color: var(--text-primary); border: 1px solid #e2e8f0;">Learn More</a>
+        </div>
+    </header>
+
+    <!-- Features Grid -->
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>Why Use MCQ-Gen?</h2>
+            <p>Designed for students, educators, and lifelong learners.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3>AI Powered</h3>
+                <p>Leverages advanced local LLMs (Ollama) to understand context and generate relevant, conceptual questions.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div>
+                <h3>Adaptive Difficulty</h3>
+                <p>Choose from Easy, Medium, or Hard modes to match your proficiency level and learning goals.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-comments"></i></div>
+                <h3>Interactive Session</h3>
+                <p>A chat-like interface that presents questions one by one, giving instant feedback and explanations.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="steps">
+        <div class="section-title">
+            <h2>How It Works</h2>
+        </div>
+        
+        <div class="step-item">
+            <div class="step-number">01</div>
+            <div class="step-content">
+                <h3>Input Your Material</h3>
+                <p>Paste your lecture notes, documentation, or simply type a topic you want to learn about into the sidebar.</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-number">02</div>
+            <div class="step-content">
+                <h3>Configure Settings</h3>
+                <p>Select your desired difficulty level (Easy/Medium/Hard) and click "Start Quiz".</p>
+            </div>
+        </div>
+
+        <div class="step-item">
+            <div class="step-number">03</div>
+            <div class="step-content">
+                <h3>Test Yourself</h3>
+                <p>Answer questions one at a time. The AI will tell you if you're right and explain the correct answer.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">MCQ-Gen AI</div>
+            <div class="socials">
+                <!-- Social placeholders -->
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 MCQ-Gen Project. Powered by Ollama & Julia.
+        </div>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        const body = document.body;
+
+        // Check local storage or system preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MCQ-Gen AI
+Comment=Generate interactive quizzes from your notes
+Exec=/home/kamila/Desktop/Tasks/mcq-gen/bin/launch-app.sh
+Icon=/home/kamila/Desktop/Tasks/mcq-gen/gui/mcq-gen.png
+Terminal=true
+Categories=Education;Science;Utility;
+Path=/home/kamila/Desktop/Tasks/mcq-gen
+StartupNotify=true

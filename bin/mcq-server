@@ -1,0 +1,3 @@
+#!/bin/bash
+# Wrapper to run the Server
+julia --project=@. -e 'using MCQGen; start_server()'

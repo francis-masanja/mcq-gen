@@ -1,0 +1,3 @@
+#!/bin/bash
+# Wrapper to run the TUI
+julia --project=@. -e 'using MCQGen; start_tui()' -- "$@"

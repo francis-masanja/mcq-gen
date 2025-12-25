@@ -1,0 +1,10 @@
+# .gitignore
+*.ji
+*.cov
+*.mem
+*.log
+.DS_Store
+.vscode/
+Manifest.toml
+tmp/
+*.tmp
