@@ -23,10 +23,15 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div :class="['sidebar', { active: isSidebarOpen }]">
             <div class="brand">
-                <i class="fa-solid fa-brain"></i>
-                <h2>MCQ-Gen AI</h2>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fa-solid fa-brain"></i>
+                    <h2>MCQ-Gen AI</h2>
+                </div>
+                <button class="mobile-toggle" @click="isSidebarOpen = !isSidebarOpen" aria-label="Toggle Menu">
+                    <i :class="['fa-solid', isSidebarOpen ? 'fa-xmark' : 'fa-bars']"></i>
+                </button>
             </div>
             
             <div class="sidebar-content">
@@ -123,6 +128,7 @@
                     messages: [], // Array of {role: 'user'|'assistant', content: string}
                     isLoading: false,
                     isDarkMode: false,
+                    isSidebarOpen: false,
                     serverStatus: 'checking' // 'online', 'offline', 'checking'
                 }
             },
@@ -134,6 +140,8 @@
                     document.body.classList.add('dark-mode');
                 }
                 
+                // Initialize mobile scrolling optimizations
+                this.initMobileScrolling();
                 this.checkHealth();
             },
             methods: {
@@ -222,9 +230,37 @@
                     this.userInput = '';
                 },
 
+                initMobileScrolling() {
+                    // Enhanced mobile scrolling initialization
+                    const messagesContainer = this.$refs.msgContainer;
+                    if (messagesContainer) {
+                        // Force enable momentum scrolling on iOS
+                        messagesContainer.style.webkitOverflowScrolling = 'touch';
+                        
+                        // Add passive event listeners for better performance
+                        messagesContainer.addEventListener('touchstart', () => {}, { passive: true });
+                        messagesContainer.addEventListener('touchmove', () => {}, { passive: true });
+                        
+                        // Prevent default scrolling behavior that might interfere
+                        messagesContainer.addEventListener('touchstart', function(e) {
+                            // Allow scrolling but prevent other touch behaviors
+                            if (this.scrollHeight > this.clientHeight) {
+                                e.stopPropagation();
+                            }
+                        }, { passive: true });
+                        
+                        console.log('Mobile scrolling initialized');
+                    }
+                },
+
                 scrollToBottom() {
                     const container = this.$refs.msgContainer;
-                    container.scrollTop = container.scrollHeight;
+                    if (container) {
+                        // Use requestAnimationFrame for smoother scrolling
+                        requestAnimationFrame(() => {
+                            container.scrollTop = container.scrollHeight;
+                        });
+                    }
                 }
             }
         }).mount('#app');

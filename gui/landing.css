@@ -30,6 +30,10 @@ body.dark-mode {
     --footer-text: #9ca3af;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -122,6 +126,7 @@ nav {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .cta-button:hover {
@@ -284,4 +289,64 @@ footer {
 
 .copyright {
     font-size: 0.9rem;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    nav {
+        flex-wrap: wrap;
+        padding: 15px 5%;
+        gap: 15px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+        font-size: 0.9rem;
+    }
+
+    .hero {
+        padding: 60px 20px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .hero div {
+        flex-direction: column;
+    }
+
+    .hero .cta-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .step-item {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .step-number {
+        font-size: 3rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 30px;
+    }
 }

@@ -19,7 +19,7 @@ if %errorlevel% neq 0 (
 :: 2. Setup AI Model
 echo --- Setting up AI Model ---
 if exist Modelfile (
-    ollama create mcq-gen -f Modelfile
+    ollama create mcq-gen -f ./Modelfile
     echo [✓] Model 'mcq-gen' created.
 ) else (
     echo [Error] Modelfile not found.

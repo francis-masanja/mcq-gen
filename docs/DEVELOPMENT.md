@@ -21,7 +21,7 @@ MCQ-Gen follows a modular architecture using Julia.
 
 1. **Clone & Enter**:
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/francis-masanja/mcq-gen
    cd mcq-gen
    ```
 2. **Instantiate**:

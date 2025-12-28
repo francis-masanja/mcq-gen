@@ -47,11 +47,15 @@ body {
     background-color: var(--primary-bg);
     margin: 0;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile */
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--text-primary);
     transition: background-color 0.3s ease, color 0.3s ease;
+    /* Mobile scrolling optimizations */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 #app {
@@ -59,12 +63,15 @@ body {
     width: 95%;
     max-width: 1400px;
     height: 90vh;
+    height: 90dvh; /* Dynamic viewport height for mobile */
     background: var(--chat-bg);
     box-shadow: var(--shadow-lg);
     border-radius: 16px;
     overflow: hidden;
     position: relative;
     transition: background-color 0.3s ease;
+    /* Mobile optimizations */
+    touch-action: manipulation;
 }
 
 /* Sidebar Styles */
@@ -172,6 +179,16 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px;
 }
 
 button {
@@ -293,13 +310,26 @@ body.dark-mode .status-badge {
     flex: 1;
     padding: 32px;
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 24px;
     scroll-behavior: smooth;
+    /* Mobile scrolling optimizations */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 /* Scrollbar styling */
+.messages {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+}
+body.dark-mode .messages {
+    scrollbar-color: #4b5563 transparent;
+}
+
 .messages::-webkit-scrollbar {
     width: 6px;
 }
@@ -314,6 +344,107 @@ body.dark-mode .messages::-webkit-scrollbar-thumb {
     background-color: #4b5563;
 }
 
+/* Mobile scrollbar improvements */
+@media (max-width: 768px) {
+    .messages::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .messages::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 2px;
+    }
+    
+    body.dark-mode .messages::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* FINAL AGGRESSIVE MOBILE SCROLLING FIX */
+@media (max-width: 768px) {
+    /* Reset everything for mobile */
+    html, body {
+        position: fixed !important;
+        overflow: hidden !important;
+        height: 100% !important;
+        width: 100% !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: contain !important;
+        touch-action: pan-y !important;
+    }
+    
+    /* Force app container */
+    #app {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    /* Chat area fixes */
+    .chat-area {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        height: calc(100vh - 120px) !important;
+        height: calc(100dvh - 120px) !important;
+    }
+    
+    /* ULTIMATE MOBILE SCROLLING FIX */
+    .messages {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+        scroll-behavior: smooth !important;
+        
+        /* Hardware acceleration */
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
+        will-change: scroll-position !important;
+        
+        /* Remove scrollbars completely on mobile */
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        -webkit-scrollbar: none !important;
+    }
+    
+    .messages::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+    
+    /* Force scrolling container properties */
+    .messages {
+        -webkit-overflow-scrolling: touch !important;
+        -webkit-momentum-scrolling: enabled !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+    }
+    
+    /* Fix header and input */
+    .chat-header {
+        flex-shrink: 0 !important;
+        height: 60px !important;
+        min-height: 60px !important;
+    }
+    
+    .input-area {
+        flex-shrink: 0 !important;
+        height: 60px !important;
+        min-height: 60px !important;
+    }
+}
+
 .empty-state {
     flex: 1;
     display: flex;
@@ -322,6 +453,8 @@ body.dark-mode .messages::-webkit-scrollbar-thumb {
     justify-content: center;
     color: var(--text-secondary);
     opacity: 0.6;
+    text-align: center;
+    padding: 20px;
 }
 
 .empty-state i {
@@ -336,7 +469,7 @@ body.dark-mode .empty-state i {
 .message-wrapper {
     display: flex;
     gap: 16px;
-    max-width: 80%;
+    max-width: 85%;
     animation: slideIn 0.3s ease-out forwards;
 }
 
@@ -389,6 +522,8 @@ body.dark-mode .assistant .avatar {
     position: relative;
     box-shadow: var(--shadow-sm);
     transition: background-color 0.3s ease, color 0.3s ease;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .user .message-content {
@@ -527,3 +662,211 @@ body.dark-mode .connection-banner {
     from { transform: translateY(-100%); }
     to { transform: translateY(0); }
 }
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 280px;
+    }
+}
+
+/* Additional mobile breakpoints */
+@media (max-width: 600px) {
+    .sidebar {
+        padding: 12px;
+    }
+    
+    .brand {
+        margin-bottom: 16px;
+    }
+    
+    .brand h2 {
+        font-size: 1.1rem;
+    }
+    
+    .chat-header {
+        padding: 10px 12px;
+    }
+    
+    .chat-header h3 {
+        font-size: 1rem;
+    }
+    
+    .messages {
+        padding: 12px;
+        gap: 16px;
+    }
+    
+    .message-content {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .input-area {
+        padding: 12px;
+    }
+    
+    .input-wrapper {
+        padding: 6px;
+    }
+    
+    .input-wrapper input {
+        padding: 10px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+}
+
+@media (max-width: 480px) {
+    #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        border-radius: 0;
+    }
+    
+    .sidebar {
+        padding: 8px;
+    }
+    
+    .brand {
+        gap: 8px;
+    }
+    
+    .brand i {
+        font-size: 1.3rem;
+    }
+    
+    .brand h2 {
+        font-size: 1rem;
+    }
+    
+    .sidebar-footer {
+        gap: 8px;
+    }
+    
+    .sidebar-footer button {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+    }
+    
+    .mobile-toggle {
+        padding: 2px;
+        font-size: 1.3rem;
+    }
+    
+    .chat-header {
+        padding: 8px;
+    }
+    
+    .messages {
+        padding: 8px;
+        gap: 12px;
+    }
+    
+    .message-wrapper {
+        max-width: 95%;
+        gap: 12px;
+    }
+    
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.8rem;
+    }
+    
+    .message-content {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+    
+    .input-area {
+        padding: 8px;
+    }
+    
+    .input-wrapper {
+        padding: 4px;
+        gap: 8px;
+    }
+    
+    .input-wrapper input {
+        padding: 8px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .send-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Ensure touch targets are at least 44px */
+    button, .mobile-toggle {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        align-items: flex-start;
+    }
+    
+    #app {
+        width: 100%;
+        height: 100vh;
+        max-width: none;
+        border-radius: 0;
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding: 16px;
+    }
+
+    .sidebar-content {
+        display: none; /* Hide configuration by default on mobile */
+    }
+
+    .sidebar.active .sidebar-content {
+        display: flex;
+    }
+
+    .brand {
+        margin-bottom: 0;
+        justify-content: space-between;
+    }
+
+    .mobile-toggle {
+        display: flex !important;
+    }
+
+    .sidebar-footer {
+        margin-top: 16px;
+        flex-direction: row;
+    }
+
+    .sidebar-footer button {
+        flex: 1;
+    }
+
+    .chat-header {
+        padding: 12px 16px;
+    }
+
+    .messages {
+        padding: 16px;
+    }
+
+    .message-wrapper {
+        max-width: 90%;
+    }
+
+    .input-area {
+        padding: 16px;
+    }
+}
+
