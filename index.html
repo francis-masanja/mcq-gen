@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MCQ-Gen AI: Turn your notes into interactive quizzes instantly using local AI. Secure, fast, and effective learning tool.">
+    <meta name="keywords" content="MCQ Generator, AI Quiz, Study Tool, Julia, Ollama, Local LLM, Education, Francis Masanja">
+    <meta name="author" content="Francis Masanja">
+    <title>MCQ-Gen AI - Interactive Quiz Generator</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-color: #6366f1;
+            --accent-dark: #4f46e5;
+            --how-it-works-bg: #f1f5f9;
+            --white: #ffffff;
+            --card-bg: #ffffff;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --border-color: rgba(0,0,0,0.05);
+            --icon-box-bg: #e0e7ff;
+            --step-number: #e2e8f0;
+            --footer-bg: #1e293b;
+            --footer-text: #94a3b8;
+        }
+
+        body.dark-mode {
+            --primary-bg: #0f1115;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --how-it-works-bg: #1a1c20;
+            --white: #1f222a;
+            --card-bg: #1f222a;
+            --nav-bg: rgba(15, 17, 21, 0.8);
+            --border-color: rgba(255,255,255,0.05);
+            --icon-box-bg: rgba(99, 102, 241, 0.15);
+            --step-number: #1f2937;
+            --footer-bg: #0a0a0c;
+            --footer-text: #9ca3af;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background-color: rgba(128,128,128,0.1);
+        }
+
+        .cta-button {
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-dark);
+            transform: translateY(-2px);
+        }
+
+        .cta-button.secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--text-secondary);
+        }
+        
+        .cta-button.secondary:hover {
+            background-color: rgba(0,0,0,0.05);
+            border-color: var(--text-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        body.dark-mode .hero h1 {
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* About & Features */
+        .features {
+            padding: 80px 5%;
+            background: var(--white);
+            transition: background-color 0.3s ease;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--primary-bg);
+            padding: 32px;
+            border-radius: 16px;
+            transition: transform 0.3s, background-color 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        body.dark-mode .card {
+            background: var(--card-bg);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background: var(--icon-box-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        .card h3 {
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        /* Dependencies Section */
+        .dependencies {
+            padding: 60px 5%;
+            background: var(--how-it-works-bg);
+        }
+        
+        .dep-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .dep-tag {
+            background: var(--white);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        body.dark-mode .dep-tag {
+            background: var(--card-bg);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 60px 5% 20px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 40px;
+            text-align: left;
+        }
+
+        .footer-brand h3 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .footer-links h4 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: var(--footer-text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .socials {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .socials a {
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .socials a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+                padding: 15px 5%;
+                gap: 15px;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                gap: 20px;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero div {
+                flex-direction: column;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 40px;
+                text-align: center;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <i class="fa-solid fa-brain"></i>
+            MCQ-Gen AI
+        </a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#features">Features</a>
+            <a href="#dependencies">Dependencies</a>
+            <a href="#contact">Contact</a>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+        <a href="#download" class="cta-button">Download <i class="fa-solid fa-download"></i></a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>Transform Your Notes into Interactive Quizzes</h1>
+        <p>Master any subject with AI-powered multiple choice questions. A privacy-first, local AI solution for students and educators.</p>
+        <div style="display: flex; gap: 15px; justify-content: center;">
+            <a href="#download" class="cta-button" style="padding: 15px 32px; font-size: 1.1rem;">Get the App</a>
+            <a href="https://github.com/francis-masanja/mcq-gen" target="_blank" class="cta-button secondary" style="padding: 15px 32px; font-size: 1.1rem;">
+                <i class="fa-brands fa-github"></i> View on GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="features" style="background: var(--primary-bg);">
+        <div class="section-title">
+            <h2>About MCQ-Gen</h2>
+            <p>MCQ-Gen is an advanced tool that leverages local Large Language Models (LLMs) to generate pedagogically sound multiple-choice questions from your study materials.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>100% Private & Local</h3>
+                <p>Powered by Ollama and Julia, everything runs on your machine. No data ever leaves your computer.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Lightning Fast</h3>
+                <p>Built with Julia for high-performance processing, generating quizzes in seconds.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
+                <h3>Educational Focus</h3>
+                <p>Designed to help you learn concepts, not just memorize facts, with adaptive difficulty levels.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Versions (TUI vs GUI) -->
+    <section id="features" class="features">
+        <div class="section-title">
+            <h2>Two Ways to Use</h2>
+            <p>Choose the interface that fits your workflow.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-desktop"></i></div>
+                <h3>Desktop App (GUI)</h3>
+                <p>A beautiful, easy-to-use web interface. Recommended for most users. Just launch and start generating quizzes immediately.</p>
+            </div>
+            <div class="card">
+                <div class="icon-box"><i class="fa-solid fa-terminal"></i></div>
+                <h3>Terminal (TUI)</h3>
+                <p>A powerful command-line interface for Julia users or those who prefer a keyboard-centric workflow. Requires manual configuration.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dependencies -->
+    <section id="dependencies" class="dependencies">
+        <div class="section-title">
+            <h2>Dependencies</h2>
+            <p>What makes it tick?</p>
+        </div>
+        <div class="dep-grid">
+            <div class="dep-tag"><i class="fa-brands fa-linux"></i> Linux / Windows / Mac</div>
+            <div class="dep-tag"><i class="fa-solid fa-code"></i> Julia Language (1.6+)</div>
+            <div class="dep-tag"><i class="fa-solid fa-robot"></i> Ollama (Local LLM)</div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="features" style="text-align: center; background: var(--primary-bg);">
+        <div class="section-title">
+            <h2>Download MCQ-Gen</h2>
+            <p>Start generating quizzes today.</p>
+        </div>
+        
+        <div class="card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <div class="icon-box" style="margin: 0 auto 20px;"><i class="fa-solid fa-box-open"></i></div>
+            <h3>Latest Release</h3>
+            <p style="margin-bottom: 20px;">Download the executable for your platform. (Link to be added)</p>
+            <a href="#" class="cta-button" style="padding: 15px 40px; font-size: 1.2rem;">
+                <i class="fa-solid fa-download"></i> Download Executable
+            </a>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: var(--text-secondary);">
+                * Note: The standalone executable includes necessary components but ensures you have Ollama installed for the best experience.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact / Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>MCQ-Gen AI</h3>
+                <p>Empowering learners with local AI.</p>
+                <div class="socials">
+                    <a href="https://github.com/francis-masanja" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#download">Download</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="https://github.com/francis-masanja" target="_blank">GitHub Profile</a></li>
+                    <li><a href="https://github.com/francis-masanja/mcq-gen" target="_blank">Project Repository</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2025 MCQ-Gen Project. Created by Francis Masanja.
+        </div>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const icon = themeToggle.querySelector('i');
+        const body = document.body;
+
+        // Check local storage or system preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            body.classList.add('dark-mode');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
